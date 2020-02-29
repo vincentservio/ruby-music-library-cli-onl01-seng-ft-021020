@@ -54,5 +54,51 @@ end
     list_by_name(sort_by_name(Artist.all))
   end
 
+  def list_genres
+    list_by_name(sort_by_name(Genre.all))
+  end
+
+  def list_songs_by_artist
+    puts "Please enter the name of an artist:"
+    input = gets.chomp
+    # search  for a matching artist, if successful, print all songs alphbetically
+    match = Artist.all.detect {|artist| artist.name == input}
+    if match
+      sort_by_name(match.songs).each_with_index {|song, i| puts "#{i + 1}. #{song.name} - #{song.genre.name}"}
+    end
+  end
+
+  def list_songs_by_genre
+    puts "Please enter the name of a genre:"
+    input = gets.chomp
+    # search for a matching genre, if successful, pring all songs alphbetically
+    match = Genre.all.detect {|genre| genre.name == input}
+    if match
+      sort_by_name(match.songs).each_with_index {|song, i| puts "#{i + 1}. #{song.artist.name} - #{song.name}"}
+    end
+  end
+
+  def play_song
+    puts "Which song number would you like to play?"
+    input = gets.chomp.to_i #convert string to int
+    match = nil
+    # capture input, iterate through song array looking for the matching index, and corresponding song
+    sort_by_name(Song.all).each_with_index do |song, i|
+      if input == (i + 1)
+        match = song
+      end
+    end
+    puts "Playing #{match.name} by #{match.artist.name}" if match
+  end
+
+  private
+  def sort_by_name(items)
+    items.sort {|item1, item2| item1.name <=> item2.name}
+  end
+
+  def list_by_name(items)
+    items.each_with_index {|item, i| puts "#{i + 1}. #{item.name}"}
+  end
+
 
 end
